@@ -8,25 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getData = exports.baseURL = void 0;
+exports.getData = void 0;
+const path_1 = __importDefault(require("path"));
+const promises_1 = require("fs/promises");
 const xml2js_1 = require("xml2js");
-exports.baseURL = "https://api.bitbucket.org/2.0/repositories/fjohanssondev/xml-data-renderer/src/main/data";
 const getData = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield fetch(exports.baseURL, {
-            method: "GET",
-            headers: {
-                Accept: 'application/xml',
-                Authorization: `Bearer ${process.env.BITBUCKET_AUTH_TOKEN}`,
-            }
+        const filePath = path_1.default.resolve(__dirname, "../data.xml");
+        const data = yield (0, promises_1.readFile)(filePath, "utf-8");
+        const result = yield (0, xml2js_1.parseStringPromise)(data, {
+            explicitArray: false
         });
-        if (!response.ok) {
-            throw new Error(`Error fetching articles: ${response.statusText}`);
-        }
-        const data = yield response.text();
-        const result = yield (0, xml2js_1.parseStringPromise)(data);
-        return result.StartDepartment;
+        return result;
     }
     catch (err) {
         throw new Error(`Failed to fetch and parse articles: ${err.message}`);

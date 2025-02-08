@@ -12,21 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const lib_1 = require("../lib");
 const router = (0, express_1.Router)();
-router.get("/articles", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { Articles } = yield (0, lib_1.getData)();
-        res.json(Articles[0].Article);
-    }
-    catch (err) {
-        res.status(500).send(err);
-    }
-}));
 router.get("/articles/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { Articles } = yield (0, lib_1.getData)();
-        const article = Articles[0].Article.find((article) => article.ArticleID[0] === req.params.id);
+        const data = yield (0, lib_1.getData)();
+        const allArticles = data.StartDepartment.MenuDepartment.flatMap((folder) => Array.isArray(folder.TextArticle) ? folder.TextArticle : []);
+        const article = allArticles.find((article) => { var _a; return ((_a = article.$) === null || _a === void 0 ? void 0 : _a.id) === req.params.id; });
         if (!article) {
-            res.status(404).send("Article not found");
+            res.status(404).send({ message: "Article not found" });
         }
         res.json(article);
     }

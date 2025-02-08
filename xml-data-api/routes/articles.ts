@@ -3,23 +3,18 @@ import { getData } from '../lib';
 
 const router = Router();
 
-router.get("/articles", async (req: Request, res: Response) => {
-  try {
-    const { Articles } = await getData()
-    res.json(Articles[0].Article)
-  } catch (err){
-    res.status(500).send(err)
-  }
-})
-
 router.get("/articles/:id", async (req: Request, res: Response) => {
   try {
-    const { Articles } = await getData()
+    const data = await getData()
 
-    const article = Articles[0].Article.find((article) => article.ArticleID[0] === req.params.id)
+    const allArticles = data.StartDepartment.MenuDepartment.flatMap((folder: any) => 
+      Array.isArray(folder.TextArticle) ? folder.TextArticle : []
+    )
+
+    const article = allArticles.find((article: any) => article.$?.id === req.params.id)
 
     if (!article) {
-      res.status(404).send("Article not found")
+      res.status(404).send({ message: "Article not found" })
     }
 
     res.json(article)
@@ -28,4 +23,4 @@ router.get("/articles/:id", async (req: Request, res: Response) => {
   }
 })
 
-export default router;
+export default router

@@ -1,8 +1,25 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core'
+import { provideHttpClient, withFetch } from '@angular/common/http'
+import { provideRouter } from '@angular/router'
+import { LucideAngularModule, FolderOpen, FolderClosed, File } from 'lucide-angular'
 
-import { routes } from './app.routes';
+import { routes } from './app.routes'
+import { provideQuillConfig } from 'ngx-quill'
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideHttpClient(
+      withFetch()
+    ),
+    importProvidersFrom(LucideAngularModule.pick({ FolderOpen, FolderClosed, File })),
+    provideQuillConfig({
+      modules: {
+        toolbar: {
+          
+        }
+      }
+    })
+  ]
 };
