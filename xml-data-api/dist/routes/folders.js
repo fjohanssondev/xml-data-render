@@ -15,19 +15,7 @@ const router = (0, express_1.Router)();
 router.get("/folders", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, lib_1.getData)();
-        const folders = data.StartDepartment.MenuDepartment.map((folder) => ({
-            id: folder.$.id,
-            title: folder.$.title,
-            subfolders: Array.isArray(folder.TextArticle)
-                ? folder.TextArticle.map((subfolder) => {
-                    var _a, _b;
-                    return ({
-                        id: ((_a = subfolder.$) === null || _a === void 0 ? void 0 : _a.id) || "???",
-                        title: ((_b = subfolder.$) === null || _b === void 0 ? void 0 : _b.title) || "???",
-                    });
-                })
-                : [],
-        }));
+        const folders = data.StartDepartment.MenuDepartment.map((folder) => (0, lib_1.processFolder)(folder));
         res.json(folders);
     }
     catch (err) {

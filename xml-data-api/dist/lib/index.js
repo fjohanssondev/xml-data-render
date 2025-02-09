@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getData = void 0;
+exports.collectArticles = exports.processFolder = exports.getData = void 0;
 const path_1 = __importDefault(require("path"));
 const promises_1 = require("fs/promises");
 const xml2js_1 = require("xml2js");
@@ -30,3 +30,37 @@ const getData = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getData = getData;
+const processFolder = (folder) => {
+    const subfolders = [];
+    if (Array.isArray(folder.TextArticle)) {
+        subfolders.push(...folder.TextArticle.map((subfolder) => (0, exports.processFolder)(subfolder)));
+    }
+    if (Array.isArray(folder.SubmenuDepartment)) {
+        subfolders.push(...folder.SubmenuDepartment.map((subfolder) => {
+            const processedSubfolder = (0, exports.processFolder)(subfolder);
+            if (Array.isArray(subfolder.TextArticle)) {
+                processedSubfolder.subfolders.push(...subfolder.TextArticle.map((textArticle) => (0, exports.processFolder)(textArticle)));
+            }
+            return processedSubfolder;
+        }));
+    }
+    return {
+        id: folder.$.id,
+        title: folder.$.title,
+        subfolders,
+    };
+};
+exports.processFolder = processFolder;
+const collectArticles = (folder) => {
+    let articles = [];
+    if (Array.isArray(folder.TextArticle)) {
+        articles.push(...folder.TextArticle);
+    }
+    if (Array.isArray(folder.SubmenuDepartment)) {
+        folder.SubmenuDepartment.forEach((subfolder) => {
+            articles.push(...(0, exports.collectArticles)(subfolder));
+        });
+    }
+    return articles;
+};
+exports.collectArticles = collectArticles;

@@ -1,24 +1,22 @@
 import { Router, Request, Response } from 'express';
-import { getData } from '../lib';
+import { collectArticles, getData } from '../lib';
 
 const router = Router();
 
 router.get("/articles/:id", async (req: Request, res: Response) => {
   try {
-    const data = await getData()
+    const data = await getData();
 
-    const allArticles = data.StartDepartment.MenuDepartment.flatMap((folder: any) => 
-      Array.isArray(folder.TextArticle) ? folder.TextArticle : []
-    )
+    const allArticles = data.StartDepartment.MenuDepartment.flatMap((folder: any) => collectArticles(folder))
 
     const article = allArticles.find((article: any) => article.$?.id === req.params.id)
 
     if (!article) {
-      res.status(404).send({ message: "Article not found" })
+      res.status(404).send({ message: "Article not found" });
+    } else {
+      res.json(article)
     }
-
-    res.json(article)
-  } catch (err){
+  } catch (err) {
     res.status(500).send(err)
   }
 })

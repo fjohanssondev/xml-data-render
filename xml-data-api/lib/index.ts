@@ -16,3 +16,43 @@ export const getData = async () => {
     throw new Error(`Failed to fetch and parse articles: ${err.message}`)
   }
 }
+
+export const processFolder = (folder: any): any => {
+  const subfolders = []
+
+  if (Array.isArray(folder.TextArticle)) {
+    subfolders.push(...folder.TextArticle.map((subfolder: any) => processFolder(subfolder)))
+  }
+
+  if (Array.isArray(folder.SubmenuDepartment)) {
+    subfolders.push(...folder.SubmenuDepartment.map((subfolder: any) => {
+      const processedSubfolder = processFolder(subfolder)
+      if (Array.isArray(subfolder.TextArticle)) {
+        processedSubfolder.subfolders.push(...subfolder.TextArticle.map((textArticle: any) => processFolder(textArticle)))
+      }
+      return processedSubfolder;
+    }))
+  }
+
+  return {
+    id: folder.$.id,
+    title: folder.$.title,
+    subfolders,
+  }
+}
+
+export const collectArticles = (folder: any): any[] => {
+  let articles = [];
+
+  if (Array.isArray(folder.TextArticle)) {
+    articles.push(...folder.TextArticle);
+  }
+
+  if (Array.isArray(folder.SubmenuDepartment)) {
+    folder.SubmenuDepartment.forEach((subfolder: any) => {
+      articles.push(...collectArticles(subfolder));
+    });
+  }
+
+  return articles;
+}

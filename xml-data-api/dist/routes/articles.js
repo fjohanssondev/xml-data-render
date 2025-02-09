@@ -15,12 +15,14 @@ const router = (0, express_1.Router)();
 router.get("/articles/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, lib_1.getData)();
-        const allArticles = data.StartDepartment.MenuDepartment.flatMap((folder) => Array.isArray(folder.TextArticle) ? folder.TextArticle : []);
+        const allArticles = data.StartDepartment.MenuDepartment.flatMap((folder) => (0, lib_1.collectArticles)(folder));
         const article = allArticles.find((article) => { var _a; return ((_a = article.$) === null || _a === void 0 ? void 0 : _a.id) === req.params.id; });
         if (!article) {
             res.status(404).send({ message: "Article not found" });
         }
-        res.json(article);
+        else {
+            res.json(article);
+        }
     }
     catch (err) {
         res.status(500).send(err);
