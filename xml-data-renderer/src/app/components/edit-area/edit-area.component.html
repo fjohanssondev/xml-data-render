@@ -1,3 +1,15 @@
-<section class="mt-24">
-  <quill-editor [(ngModel)]="content"></quill-editor>
-</section>
+<div class="mt-24">
+  <div class="flex space-x-28">
+    <section class="flex-1">
+      @for (field of fields; track field.$.textKod){
+        <div class="mb-8">
+          <h2 class="text-base font-medium mb-1">{{ field.$.textKod }}</h2>
+          <quill-editor class="w-full" [(ngModel)]="field.$.text"></quill-editor>
+        </div>
+      }
+    </section>
+    <section>
+      <app-right-menu></app-right-menu>
+    </section>
+  </div>
+</div>

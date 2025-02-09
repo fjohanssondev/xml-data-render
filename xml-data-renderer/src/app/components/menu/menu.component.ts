@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Observable, switchMap } from 'rxjs';
 import { MenuService } from '../../services/menu/menu.service';
+import { CommonModule } from '@angular/common';
 
 interface MenuItem {
   id: string,
@@ -12,7 +12,7 @@ interface MenuItem {
 
 @Component({
   selector: 'app-menu',
-  imports: [LucideAngularModule, RouterModule],
+  imports: [LucideAngularModule, RouterModule, CommonModule],
   templateUrl: './menu.component.html',
 })
 export class MenuComponent implements OnInit {
@@ -26,7 +26,6 @@ export class MenuComponent implements OnInit {
   ngOnInit(){
     this.menuService.getMenu().subscribe((data: any) => {
       this.menu = data
-      console.log(this.menu)
     })
   }
 

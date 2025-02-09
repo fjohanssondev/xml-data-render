@@ -1,2 +1,6 @@
+@theme {
+  --font-sans: "Source Sans 3", "sans-serif";
+}
+
 @import "tailwindcss";
 @import 'quill/dist/quill.snow.css';

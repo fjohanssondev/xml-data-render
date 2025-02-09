@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/menu/menu.component';
-import { EditAreaComponent } from "./components/edit-area/edit-area.component";
+import { ButtonComponent } from './components/ui/button/button.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MenuComponent, EditAreaComponent],
+  imports: [RouterOutlet, MenuComponent, ButtonComponent],
   templateUrl: './app.component.html',
 })
 export class AppComponent {

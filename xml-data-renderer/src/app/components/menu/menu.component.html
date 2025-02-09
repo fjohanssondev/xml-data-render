@@ -1,16 +1,37 @@
-<aside class="min-h-screen border-r border-gray-200 p-4">
-  <nav>
-    <ul class="space-y-2">
-      @for (folder of menu; track folder.id) {
-        <li>
+<aside class="relative h-full border-r border-gray-200 px-6 pb-6 overflow-y-auto [&::-webkit-scrollbar]:w-1
+[&::-webkit-scrollbar-track]:rounded-full
+[&::-webkit-scrollbar-track]:bg-gray-100
+[&::-webkit-scrollbar-thumb]:rounded-full
+[&::-webkit-scrollbar-thumb]:bg-gray-300
+dark:[&::-webkit-scrollbar-track]:bg-neutral-200
+dark:[&::-webkit-scrollbar-thumb]:bg-zinc-400">
+  <span class="text-xl font-bold block">Polopoly</span>
+  <nav class="mt-12">
+    <h3 class="text-zinc-700 text-sm font-semibold mb-2">Huvudmeny</h3>
+    <ul class="space-y-1">
+      @for (folder of menu; track $index) {
+        <li class="hover:bg-zinc-100 rounded py-1">
+          <div [ngClass]="{
+            'block': isOpen(folder.id), 
+            'hidden': !isOpen(folder.id), 
+            'absolute': true, 
+            'left-0': true, 
+            '-mt-1': true, 
+            'rounded-tr-lg': true, 
+            'rounded-br-lg': true, 
+            'border-0': true, 
+            'w-[5px]': true, 
+            'h-7': true, 
+            'bg-indigo-600': true
+          }"></div>
           @if (folder.subfolders.length > 0) {
-            <button (click)="openFolder(folder.id)" class="flex items-center text-sm cursor-pointer">
-              <lucide-angular size="16" name="{{ isOpen(folder.id) ? 'folder-open' : 'folder-closed' }}"></lucide-angular>
+            <button (click)="openFolder(folder.id)" class="flex items-center text-base cursor-pointer w-full">
+              <lucide-angular size="20" [ngClass]="{ 'text-indigo-600': isOpen(folder.id) }" name="{{ isOpen(folder.id) ? 'folder-open' : 'folder-closed' }}"></lucide-angular>
               <span class="ml-2">{{ folder.title }}</span>
             </button>
           } @else {
-            <a class="flex items-center text-sm cursor-default" [routerLink]="['/edit-area', folder.id]">
-              <lucide-angular size="16" name="file"></lucide-angular>
+            <a class="flex items-center text-base cursor-default" [routerLink]="['/edit-area', folder.id]">
+              <lucide-angular size="20" name="file"></lucide-angular>
               <span class="ml-2">{{ folder.title }}</span>
             </a>
           }
@@ -18,13 +39,46 @@
     
         @if (isOpen(folder.id)) {
           <ul class="ml-4 space-y-1">
-            @for (subfolder of folder.subfolders; track subfolder.id) {
-              <li>
-                <a class="flex items-center text-sm cursor-default" [routerLink]="['/edit-area', subfolder.id]">
-                  <lucide-angular size="16" name="file" />
-                  <span class="ml-2">{{ subfolder.title }}</span>
-                </a>
+            @for (subfolder of folder.subfolders; track $index) {
+              <li class="hover:bg-zinc-100 rounded py-1">
+                <div [ngClass]="{
+                  'block': isOpen(subfolder.id), 
+                  'hidden': !isOpen(subfolder.id), 
+                  'absolute': true, 
+                  'left-0': true, 
+                  '-mt-1': true, 
+                  'rounded-tr-lg': true, 
+                  'rounded-br-lg': true, 
+                  'border-0': true, 
+                  'w-[5px]': true, 
+                  'h-7': true, 
+                  'bg-indigo-600': true
+                }"></div>
+                @if (subfolder.subfolders.length > 0) {
+                  <button (click)="openFolder(subfolder.id)" class="flex items-center text-base cursor-pointer w-full">
+                    <lucide-angular size="20" [ngClass]="{ 'text-indigo-600': isOpen(subfolder.id) }" name="{{ isOpen(subfolder.id) ? 'folder-open' : 'folder-closed' }}"></lucide-angular>
+                    <span class="ml-2">{{ subfolder.title }}</span>
+                  </button>
+                } @else {
+                  <a class="flex items-center text-base cursor-default" [routerLink]="['/edit-area', subfolder.id]">
+                    <lucide-angular size="20" name="file"></lucide-angular>
+                    <span class="ml-2">{{ subfolder.title }}</span>
+                  </a>
+                }
               </li>
+              
+              @if (isOpen(subfolder.id)) {
+                <ul class="ml-4 space-y-1">
+                  @for (subsubfolder of subfolder.subfolders; track $index) {
+                    <li class="hover:bg-zinc-100 rounded py-1">
+                      <a class="flex items-center text-base cursor-default" [routerLink]="['/edit-area', subsubfolder.id]">
+                        <lucide-angular size="20" name="file" />
+                        <span class="ml-2">{{ subsubfolder.title }}</span>
+                      </a>
+                    </li>
+                  }
+                </ul>
+              }
             }
           </ul>
         }
